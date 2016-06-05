@@ -1,4 +1,4 @@
-import sys, os, random, pygame
+import sys, os, random, pygame, pdb
 sys.path.append(os.path.join("objects"))
 import SudokuSquare
 import SudokuGrid
@@ -58,7 +58,7 @@ def main():
     # a random number to fill in here or accept user
     # input for a duplicatable puzzle.
     puzzleNumber = int(random.random() * 20000) + 1
-    pygame.display.set_caption("PySudoku  -  Puzzle #" + str(puzzleNumber))    
+    pygame.display.set_caption("PySudoku  -  Puzzle " + str(puzzleNumber))    
     inital, current, solution = getSudoku(puzzleNumber)
 
     theSquares = []
@@ -97,6 +97,8 @@ def main():
                  pygame.K_9 : "9", pygame.K_SPACE : "", pygame.K_BACKSPACE : "",
                  pygame.K_DELETE : "" }
 
+    pdb.set_trace ()
+
     while 1:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -111,17 +113,20 @@ def main():
                         currentHighlight = x
                         currentHighlight.highlight()
             if event.type == pygame.KEYDOWN and event.key in theNumbers:
-                #currentHighlight.change(theNumbers[event.key])
+                currentHighlight.change(theNumbers[event.key])
                 print "[ %s, %s ]" % currentHighlight.currentLoc()
                 xLoc, yLoc = currentHighlight.currentLoc()
+                current.setNum(yLoc, xLoc, theNumbers[event.key])
 
                 # XUXU
-                if current.checkAll (yLoc, xLoc,theNumbers[event.key]):
-                    currentHighlight.unhighlight()
-                    currentHighlight.highlight_wrong()
-                else:
-                    currentHighlight.change(theNumbers[event.key])
-                    current.setNum(yLoc, xLoc, theNumbers[event.key])
+                #print "chama check all"
+                #r = current.checkAll (yLoc, xLoc,theNumbers[event.key])
+                #if r:
+                    #currentHighlight.unhighlight()
+                    #currentHighlight.highlight_wrong()
+                #else:
+                    #currentHighlight.change(theNumbers[event.key])
+                    #current.setNum(yLoc, xLoc, theNumbers[event.key])
 
                 current.printGrid()
 

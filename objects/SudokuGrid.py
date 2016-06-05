@@ -1,4 +1,5 @@
 import random
+import pdb
 
 class SudokuGrid:
     """A class to generate and check Sudoku data."""
@@ -10,12 +11,12 @@ class SudokuGrid:
             temp.append(None)
         for y in range(9):
             self.grid.append(temp[:])
-    
+
     def getNum(self, row, column):
         """Get a number at a specific position.
         Takes a row and a column."""
         return self.grid[row][column]
-        
+
     def setNum(self, row, column, number):
         """Set a number at a specific position.
         Takes a row and a column."""
@@ -25,6 +26,7 @@ class SudokuGrid:
         """Check for a number within a row.
         Takes a row to look in and a number to check for."""
         for x in range(9):
+            #print "x = " + x + " row = " + row + " number = " + number
             if self.getNum(row, x) == number:
                 return True
         return False
@@ -33,6 +35,7 @@ class SudokuGrid:
         """Check for a number within a column.
         Takes a column to look in and a number to check for."""
         for y in range(9):
+            #print "y = " + y + " column = " + column + " number = " + number
             if self.getNum(y, column) == number:
                 return True
         return False
@@ -49,6 +52,11 @@ class SudokuGrid:
         
         for y in rowrange:
             for x in colrange:
+
+                #print "x = " + x + " row = " + row 
+                #print "y = " + y + " column = " + column
+                #print "number = " + number
+
                 if self.getNum(y, x) == number:
                     return True
         return False
@@ -57,12 +65,16 @@ class SudokuGrid:
         """Performs all three (row, column and square) checks.
         Takes a row and column to look in and a number to check for."""
         if self.checkRow(row, number):
+            #pdb.set_trace()
             return True
         elif self.checkColumn(column, number):
+            #pdb.set_trace()
             return True
         elif self.checkSquare(row, column, number):
+            #pdb.set_trace()
             return True
         else:
+            #pdb.set_trace()
             return False
         
     def printGrid(self):
