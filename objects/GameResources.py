@@ -1,4 +1,4 @@
-import os, pygame
+import os, pygame, random
 
 def load_image(name):
     """A better load of images."""
@@ -32,3 +32,17 @@ def load_music(name):
         pygame.mixer.music.play(-1, 0.0)
     except pygame.error, message:
         print "Oops! Could not load music:", fullname
+
+def load_Solution ():
+    random.seed()
+    r = int ((random.random ()) * 10)
+    line = r * 82
+
+    arq = open ('misc/solutions.txt','r')
+    arq.seek (line)
+    tmp = arq.readline (82)
+    arq.close ()
+
+    return tmp
+
+

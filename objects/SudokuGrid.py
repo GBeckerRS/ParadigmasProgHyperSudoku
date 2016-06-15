@@ -1,84 +1,75 @@
 import random
 import pdb
+import sys # Handling exceptions
 
 class SudokuGrid:
-    """A class to generate and check Sudoku data."""
     def __init__(self):
-        """Builds a default, totally empty grid."""
+        """ Construtor do objeto """
         self.grid = []
         temp = []
+        self.qtEmptyCells = 0
         for x in range(9):
             temp.append(None)
         for y in range(9):
             self.grid.append(temp[:])
 
     def getNum(self, row, column):
-        """Get a number at a specific position.
-        Takes a row and a column."""
+        """ Retorna um numero de uma posicao especifica """
         return self.grid[row][column]
 
     def setNum(self, row, column, number):
-        """Set a number at a specific position.
-        Takes a row and a column."""
+        """ Insere um numero em uma posicao especifica """
         self.grid[row][column] = number
+        self.qtEmptyCells = self.qtEmptyCells - 1
 
     def checkRow(self, row, number):
-        """Check for a number within a row.
-        Takes a row to look in and a number to check for."""
+        """ Verifica o numero eh repetido na linha """
         for x in range(9):
-            #print "x = " + x + " row = " + row + " number = " + number
             if self.getNum(row, x) == number:
                 return True
         return False
-    
+
     def checkColumn(self, column, number):
-        """Check for a number within a column.
-        Takes a column to look in and a number to check for."""
+        """ Verifica o numero eh repetido na coluna """
         for y in range(9):
-            #print "y = " + y + " column = " + column + " number = " + number
             if self.getNum(y, column) == number:
                 return True
         return False
-        
+
     def checkSquare(self, row, column, number):
-        """Check for a number within a square.
-        Takes a row and column to look in and a number to check for."""
+        """ Verifica o numero eh repetido na quadrado """
         if row in (0, 1, 2): rowrange = (0, 1, 2)
         if row in (3, 4, 5): rowrange = (3, 4, 5)
         if row in (6, 7, 8): rowrange = (6, 7, 8)
         if column in (0, 1, 2): colrange = (0, 1, 2)
         if column in (3, 4, 5): colrange = (3, 4, 5)
         if column in (6, 7, 8): colrange = (6, 7, 8)
-        
+
         for y in rowrange:
             for x in colrange:
-
-                #print "x = " + x + " row = " + row 
-                #print "y = " + y + " column = " + column
-                #print "number = " + number
-
                 if self.getNum(y, x) == number:
                     return True
         return False
     
     def checkAll(self, row, column, number):
-        """Performs all three (row, column and square) checks.
-        Takes a row and column to look in and a number to check for."""
+        """ Executa todas as validacoes """
         if self.checkRow(row, number):
-            #pdb.set_trace()
             return True
         elif self.checkColumn(column, number):
-            #pdb.set_trace()
             return True
         elif self.checkSquare(row, column, number):
-            #pdb.set_trace()
             return True
         else:
-            #pdb.set_trace()
             return False
-        
+
+    def checkFull (self):
+        """ Verifica se o tabuleiro foi totalmente preenchido """
+        if self.qtEmptyCells == 0:
+            return True
+        return False
+
     def printGrid(self):
-        """Provides a decent print for debugging at the console."""
+        """ Debug do tabuleiro """
         print
         for y in range(9):
             for x in range(9):
@@ -96,48 +87,88 @@ class SudokuGrid:
                 print
         print
 
-    def createGrid(self, genAmount=81, theSeed=None):
-        """Use a simple method to generate a puzzle.
-        Takes numToGen to place that number of elements 
-        on the grid."""
+    def createGrid(self, genAmount=81, theSeed=None,isSolution=False):
+        """ Cria um tabuleiro """
         random.seed(theSeed)
-        
+
         avail = []
         for num in range(0, 81):
             avail.append((num % 9) + 1)
 
-        while len(avail) > 40:
+        # Dificuldade do jogo pode ser alterada aqui pela quantidade
+        # de numeros gerados no tabuleiro
+        difficulty = 40
+        if isSolution:
+            difficulty = 0
+
+        while len(avail) > difficulty:
             location = int(random.random() * len(avail))
             numToPlace = avail[location]
             row = int(random.random() * 9)
             col = int(random.random() * 9)
-            
-            # print "Trying to place %s at [ %s, %s ]" % (numToPlace, row, col)
-            
+
             if self.getNum(row, col) == None:
                 if not self.checkAll(row, col, numToPlace):
                     self.setNum(row, col, numToPlace)
-                    # print "Success!"
                     del avail[location]
-                # else:
-                    # self.printGrid()
-            # else:
-                # self.printGrid()
-    
+        self.qtEmptyCells = len (avail) + 1
+
+    def createGrid_1 (self, genAmount=81, theSeed=None,isSolution=False):
+        """ Cria um tabuleiro """
+        random.seed(theSeed)
+
+        avail = []
+        for num in range(0, genAmount):
+            avail.append((num % 9) + 1)
+        pdb.set_trace ()
+
+        posit = []
+        for num in range(0, 81):
+            posit.append(num)
+        pdb.set_trace ()
+
+        cPosit = 0
+        cout = 0
+        p = 0
+        #while len(avail) >= 0:
+        while len(posit) >= 0:
+            location = int(random.random() * len(avail))
+            numToPlace = avail[location]
+
+            p = int(random.random() * len(posit))
+            row = int(random.random() * 9)
+            col = int(random.random() * 9)
+            try:
+                pos = posit.index (p)
+            except: # Handling all exception
+                pos = -1
+                count =+ 1
+            pdb.set_trace ()
+            if pos >= 0:
+                del posit[pos]
+
+        print "Vezes erradas = "
+        pdb.set_trace ()
+
+
     def checkSolution(self, solution):
+        """ Verifica o tabuleiro preenchido contra a solucao encotrada """
+        fWrong = True
         for row in range(9):
             for col in range(9):
                 if not solution.getNum(row, col) == self.getNum(row, col):
-                    return False
-        return True
-        
+                    fWrong = False
+                    # If a wrong number, empty the cell
+                    self.setNum (row, col, "")
+        return fWrong
+
 
 if __name__ == "__main__":
     print "Testing SudokuGrid functionality."
     print "Create an empty grid..."
     sampleGrid = SudokuGrid()
     sampleGrid.printGrid()
-    
+
     # print
     # print "Compare an empty grid to another empty grid..."
     # emptyGrid = SudokuGrid()
@@ -171,7 +202,7 @@ if __name__ == "__main__":
     
     print
     print "Attempting to create a full solution..."
-    sampleGrid.createGrid(81)
+    sampleGrid.createGrid_1(81,None,True)
     print
     print
     print "DONE!"

@@ -1,13 +1,13 @@
 import pygame
 
 class SudokuSquare:
-    """A sudoku square class."""
+    """ Construtor """
     def __init__(self, number=None, offsetX=0, offsetY=0, edit="Y", xLoc=0, yLoc=0):
         if number != None:
             number = str(number)
         else:
             number = ""
-        
+
         self.font = pygame.font.Font(None, 30)
         self.text = self.font.render(number, 1, (0, 0, 0))
         self.textpos = self.text.get_rect()
@@ -26,11 +26,13 @@ class SudokuSquare:
 
 
     def draw(self):
+        """ Desenha o numero no tabuleiro (tela) """
         screen = pygame.display.get_surface()
         screen.blit(self.collide, self.collideRect)
         screen.blit(self.text, self.textpos)
 
 
+    """ Verifica se a posicao recebida pertence ao quadrado """
     def checkCollide(self, collision):
         if len(collision) == 2:
             return self.collideRect.collidepoint(collision)
@@ -54,7 +56,7 @@ class SudokuSquare:
         self.collide.fill((255, 0, 0))
         self.draw()
 
-
+    """ Altera o numero da celula """
     def change(self, number):
         if number != None:
             number = str(number)
@@ -70,4 +72,6 @@ class SudokuSquare:
 
 
     def currentLoc(self):
+        """ Retorna a localizacao de uma celula """
         return self.xLoc, self.yLoc
+
